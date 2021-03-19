@@ -8,3 +8,10 @@ access_token =
 # access_tokenにはアクセストークンを入力
 # 学習用アカウントと同じアカウントを利用したい場合は同じアクセストークンを入力(非推奨)
 access_token = 
+
+[override]
+# 自分以外のアカウントのbotを作る場合はacctを指定する
+acct =
+
+# トゥートの公開範囲を変えたい場合は指定する
+visibility =

@@ -5,9 +5,13 @@ import requests
 import json
 
 
-def get_account_info(domain, access_token):
+def get_account_info(domain, access_token, acct=''):
     headers = {'Authorization': 'Bearer {}'.format(access_token)}
     res = requests.get('https://' + domain + '/api/v1/accounts/verify_credentials', headers=headers).json()
+    if acct != '':
+        lookup = requests.get('https://' + domain + '/api/v2/search', headers=headers, json={"q": acct, "resolve": False, "limit": 1}).json()
+        if len(lookup['accounts']) == 1:
+            res = lookup['accounts'][0]
     return res
 
 

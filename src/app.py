@@ -19,8 +19,10 @@ def worker():
     domain = config_ini['read']['domain']
     read_access_token = config_ini['read']['access_token']
     write_access_token = config_ini['write']['access_token']
+    override_acct = config_ini['override']['acct']
+    override_visibility = config_ini['override']['visibility']
 
-    account_info = mastodonTool.get_account_info(domain, read_access_token)
+    account_info = mastodonTool.get_account_info(domain, read_access_token, override_acct)
     params = {"exclude_replies": 1, "exclude_reblogs": 1}
     filename = "{}@{}".format(account_info["username"], domain)
     filepath = os.path.join("./chainfiles", os.path.basename(filename.lower()) + ".json")
@@ -37,7 +39,10 @@ def worker():
         sentence = re.sub(r'(:.*?:)', r' \1 ', sentence)
         print(sentence)
     try:
-        mastodonTool.post_toot(domain, write_access_token, {"status": sentence})
+        body = {"status": sentence}
+        if override_visibility != '':
+            body['visibility'] = override_visibility
+        mastodonTool.post_toot(domain, write_access_token, body)
     except Exception as e:
         print("投稿エラー: {}".format(e))
 
