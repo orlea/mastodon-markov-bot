@@ -19,8 +19,13 @@ def worker():
     domain = config_ini['read']['domain']
     read_access_token = config_ini['read']['access_token']
     write_access_token = config_ini['write']['access_token']
-    override_acct = config_ini['override']['acct']
-    override_visibility = config_ini['override']['visibility']
+    override_acct = ''
+    override_visibility = ''
+    if 'override' in config_ini:
+        if 'acct' in config_ini['override']:
+            override_acct = config_ini['override']['acct']
+        if 'visibility' in config_ini['override']:
+            override_visibility = config_ini['override']['visibility']
 
     account_info = mastodonTool.get_account_info(domain, read_access_token, override_acct)
     params = {"exclude_replies": 1, "exclude_reblogs": 1}
