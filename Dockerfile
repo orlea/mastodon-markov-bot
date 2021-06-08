@@ -12,3 +12,4 @@ COPY src/Pipfile ./
 COPY src/Pipfile.lock ./
 RUN pip install pipenv
 RUN pipenv install --system
+RUN cp /etc/mecabrc /usr/local/etc/mecabrc
