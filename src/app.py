@@ -21,11 +21,14 @@ def worker():
     write_access_token = config_ini['write']['access_token']
     override_acct = ''
     override_visibility = ''
+    override_dryrun = False
     if 'override' in config_ini:
         if 'acct' in config_ini['override']:
             override_acct = config_ini['override']['acct']
         if 'visibility' in config_ini['override']:
             override_visibility = config_ini['override']['visibility']
+        if 'dryrun' in config_ini['override']:
+            override_dryrun = config_ini['override']['dryrun'] == "true"
 
     account_info = mastodonTool.get_account_info(domain, read_access_token, override_acct)
     params = {"exclude_replies": 1, "exclude_reblogs": 1}
@@ -45,9 +48,10 @@ def worker():
         print(sentence)
     try:
         body = {"status": sentence}
-        if override_visibility != '':
-            body['visibility'] = override_visibility
-        mastodonTool.post_toot(domain, write_access_token, body)
+        if not override_dryrun:
+            if override_visibility != '':
+                body['visibility'] = override_visibility
+            mastodonTool.post_toot(domain, write_access_token, body)
     except Exception as e:
         print("投稿エラー: {}".format(e))
 
