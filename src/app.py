@@ -29,6 +29,9 @@ def worker():
             override_visibility = config_ini['override']['visibility']
         if 'dryrun' in config_ini['override']:
             override_dryrun = config_ini['override']['dryrun'] == "true"
+        if 'remove_tags' in config_ini['override']:
+            override_remove_tags = config_ini['override']['remove_tags']
+
 
     account_info = mastodonTool.get_account_info(domain, read_access_token, override_acct)
     params = {"exclude_replies": 1, "exclude_reblogs": 1}
@@ -43,6 +46,9 @@ def worker():
     with open("./chainfiles/{}@{}.json".format(account_info["username"].lower(), domain)) as f:
         textModel = markovify.Text.from_json(f.read())
         sentence = textModel.make_sentence(tries=300)
+        # botがbot以外のハッシュタグを汚染する事がある為取り除けるように
+        if override_remove_tags != '':
+            sentence = sentence.replace('#', '＃')
         sentence = "".join(sentence.split()) + ' #bot'
         sentence = re.sub(r'(:.*?:)', r' \1 ', sentence)
         print(sentence)
