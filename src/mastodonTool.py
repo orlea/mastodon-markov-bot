@@ -57,6 +57,9 @@ def fetchTootsLoop(domain, access_token, account_id, params, loop):
                 if x['visibility'] == 'private' or x['visibility'] == 'direct':
                     print("鍵投稿のためスキップしました。 {}".format(x['content']))
                     continue
+                elif x['spoiler_text'] != "":
+                    print("NSFW投稿です。 {}".format(x['content']))
+                    continue
                 seikei = re.compile(r"<[^>]*?>").sub("", x['content'])
                 toots.append(seikei)
                 params["max_id"] = last_id
